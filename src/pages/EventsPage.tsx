@@ -1,47 +1,25 @@
-import { type ReactNode, useCallback, useState } from "react";
+import { type ReactNode, useMemo } from "react";
 
-import Events, { type Event } from "../components/Events.tsx";
-import { get } from "../utils/http.ts";
+import Events from "../components/Events.tsx";
 import ErrorMessage from "../components/ErrorMessage.tsx";
-
-type RawDataEvents = {
-  text: string;
-  year: number;
-};
-
-type ApiResponse = {
-  births: RawDataEvents[];
-};
+import { useAppDispatch, useAppSelector } from "../store/store.ts";
+import { fetchBirthdays } from "../store/birthdaysSlice.ts";
 
 export default function EventsPage() {
-  const [fetchedEvents, setFetchedEvents] = useState<Event[]>();
-  const [isFetching, setIsFetching] = useState(false);
-  const [error, setError] = useState<string>();
+  const dispatch = useAppDispatch();
+  const { birthdays, isLoading, error, currentPage, itemsPerPage } =
+    useAppSelector((state) => state.birthdays);
 
-  const fetchPosts = useCallback(async () => {
-    setIsFetching(true);
-    setError(undefined);
-    try {
-      const now = new Date();
-      const month = String(now.getMonth() + 1).padStart(2, "0");
-      const day = String(now.getDate()).padStart(2, "0");
+  // Calculate paginated birthdays
+  const paginatedBirthdays = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return birthdays.slice(startIndex, endIndex);
+  }, [birthdays, currentPage, itemsPerPage]);
 
-      const data = (await get(
-        `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${month}/${day}`
-      )) as ApiResponse;
-
-      const events: Event[] = data.births.map((rawPost) => {
-        return { text: rawPost.text, year: rawPost.year };
-      });
-
-      setFetchedEvents(events);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      }
-    }
-    setIsFetching(false);
-  }, []);
+  const handleFetch = () => {
+    dispatch(fetchBirthdays());
+  };
 
   let content: ReactNode;
   let buttonContent: ReactNode;
@@ -50,15 +28,15 @@ export default function EventsPage() {
     content = <ErrorMessage text={error} />;
   }
 
-  if (fetchedEvents) {
-    content = <Events events={fetchedEvents} title="Today's Birthdays" />;
-  } else if (!isFetching) {
+  if (birthdays.length > 0) {
+    content = <Events events={paginatedBirthdays} title="Today's Birthdays" />;
+  } else if (!isLoading) {
     buttonContent = (
-      <button onClick={fetchPosts}>Fetch Today's Birthdays</button>
+      <button onClick={handleFetch}>Fetch Today's Birthdays</button>
     );
   }
 
-  if (isFetching) {
+  if (isLoading) {
     content = <p>Fetching posts...</p>;
   }
 
