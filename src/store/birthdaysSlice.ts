@@ -17,7 +17,7 @@ type ApiResponse = {
 
 type SortOrder = "asc" | "desc";
 
-interface BirthdaysState {
+export interface BirthdaysState {
   birthdays: Event[];
   currentPage: number;
   itemsPerPage: number;
