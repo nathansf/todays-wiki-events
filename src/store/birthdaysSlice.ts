@@ -15,10 +15,13 @@ type ApiResponse = {
   births: RawDataEvents[];
 };
 
+type SortOrder = "asc" | "desc";
+
 interface BirthdaysState {
   birthdays: Event[];
   currentPage: number;
   itemsPerPage: number;
+  sortOrder: SortOrder;
   isLoading: boolean;
   error: string | null;
 }
@@ -27,6 +30,7 @@ const initialState: BirthdaysState = {
   birthdays: [],
   currentPage: 1,
   itemsPerPage: 10,
+  sortOrder: "desc", // Newest first by default
   isLoading: false,
   error: null,
 };
@@ -61,6 +65,10 @@ const birthdaysSlice = createSlice({
       state.itemsPerPage = action.payload;
       state.currentPage = 1; // Reset to first page when changing items per page
     },
+    toggleSortOrder: (state) => {
+      state.sortOrder = state.sortOrder === "desc" ? "asc" : "desc";
+      state.currentPage = 1; // Reset to first page when changing sort order
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,5 +88,6 @@ const birthdaysSlice = createSlice({
   },
 });
 
-export const { setCurrentPage, setItemsPerPage } = birthdaysSlice.actions;
+export const { setCurrentPage, setItemsPerPage, toggleSortOrder } =
+  birthdaysSlice.actions;
 export default birthdaysSlice.reducer;
