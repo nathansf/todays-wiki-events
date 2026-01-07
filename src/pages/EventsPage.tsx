@@ -1,12 +1,13 @@
 import { type ReactNode, useMemo } from "react";
 
 import Events from "../components/Events.tsx";
-import ErrorMessage from "../components/ErrorMessage.tsx";
+import ErrorModal from "../components/ErrorModal.tsx";
 import { useAppDispatch, useAppSelector } from "../store/store.ts";
 import {
   fetchBirthdays,
   setCurrentPage,
   toggleSortOrder,
+  clearError,
 } from "../store/birthdaysSlice.ts";
 import styles from "./EventsPage.module.css";
 
@@ -64,7 +65,9 @@ export default function EventsPage() {
   let paginationControls: ReactNode;
 
   if (error) {
-    content = <ErrorMessage text={error} />;
+    content = (
+      <ErrorModal text={error} onClose={() => dispatch(clearError())} />
+    );
   }
 
   if (birthdays.length > 0) {

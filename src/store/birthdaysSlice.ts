@@ -69,6 +69,9 @@ const birthdaysSlice = createSlice({
       state.sortOrder = state.sortOrder === "desc" ? "asc" : "desc";
       state.currentPage = 1; // Reset to first page when changing sort order
     },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,6 +91,6 @@ const birthdaysSlice = createSlice({
   },
 });
 
-export const { setCurrentPage, setItemsPerPage, toggleSortOrder } =
+export const { setCurrentPage, setItemsPerPage, toggleSortOrder, clearError } =
   birthdaysSlice.actions;
 export default birthdaysSlice.reducer;
