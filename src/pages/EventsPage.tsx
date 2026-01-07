@@ -2,6 +2,7 @@ import { type ReactNode, useMemo } from "react";
 
 import Events from "../components/Events.tsx";
 import ErrorModal from "../components/ErrorModal.tsx";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
 import { useAppDispatch, useAppSelector } from "../store/store.ts";
 import {
   fetchBirthdays,
@@ -107,7 +108,7 @@ export default function EventsPage() {
   }
 
   if (isLoading) {
-    content = <p>Fetching posts...</p>;
+    content = <LoadingSpinner />;
   }
 
   return (
