@@ -30,7 +30,7 @@ describe("fetchBirthdays thunk", () => {
           birthdays: [],
           currentPage: 5, // prove reset happens
           itemsPerPage: 10,
-          sortOrder: "desc",
+          sortOrder: "desc" as const,
           isLoading: false,
           error: "old error",
         },
