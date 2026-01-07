@@ -1,3 +1,5 @@
+import styles from "./Events.module.css";
+
 export type Event = {
   text: string;
   year: number;
@@ -22,13 +24,12 @@ export default function Events({
       <button onClick={onToggleSort}>
         Sort by {sortOrder === "asc" ? "Newest First" : "Oldest First"}
       </button>
-      <ul>
+      <ul className={styles.list}>
         {events.map((event) => (
-          <ul key={event.text}>
-            <p>
-              {event.text} {event.year}
-            </p>
-          </ul>
+          <li key={`${event.text}-${event.year}`} className={styles.row}>
+            <span className={styles.year}>{event.year}</span>
+            <span className={styles.text}>{event.text}</span>
+          </li>
         ))}
       </ul>
     </div>

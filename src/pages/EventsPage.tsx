@@ -100,7 +100,7 @@ export default function EventsPage() {
     );
   } else if (!isLoading) {
     buttonContent = (
-      <div>
+      <div className={styles.emptyState}>
         <p>Click button to retrieve Wikipedia birthdays for today's date</p>
         <button onClick={handleFetch}>Fetch Today's Birthdays</button>
       </div>
