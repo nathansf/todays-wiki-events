@@ -8,6 +8,7 @@ import {
   setCurrentPage,
   toggleSortOrder,
 } from "../store/birthdaysSlice.ts";
+import styles from "./EventsPage.module.css";
 
 export default function EventsPage() {
   const dispatch = useAppDispatch();
@@ -67,26 +68,21 @@ export default function EventsPage() {
   }
 
   if (birthdays.length > 0) {
+    const now = new Date();
+    const monthName = now.toLocaleString("en-US", { month: "long" });
+    const day = now.getDate();
     content = (
-      <Events
-        events={paginatedBirthdays}
-        title="Today's Birthdays"
-        sortOrder={sortOrder}
-      />
+      <div>
+        <Events
+          events={paginatedBirthdays}
+          title={`Birthdays for Today (${monthName} ${day})`}
+          sortOrder={sortOrder}
+          onToggleSort={handleToggleSort}
+        />
+      </div>
     );
     paginationControls = (
-      <div
-        style={{
-          marginTop: "1rem",
-          display: "flex",
-          gap: "1rem",
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <button onClick={handleToggleSort}>
-          Sort by {sortOrder === "asc" ? "Newest First" : "Oldest First"}
-        </button>
+      <div className={styles.paginationControls}>
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>
           Previous
         </button>
@@ -100,7 +96,10 @@ export default function EventsPage() {
     );
   } else if (!isLoading) {
     buttonContent = (
-      <button onClick={handleFetch}>Fetch Today's Birthdays</button>
+      <div>
+        <p>Click button to retrieve Wikipedia birthdays for today's date</p>
+        <button onClick={handleFetch}>Fetch Today's Birthdays</button>
+      </div>
     );
   }
 

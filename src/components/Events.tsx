@@ -7,16 +7,21 @@ type EventsProps = {
   events: Event[];
   title: string;
   sortOrder: "asc" | "desc";
+  onToggleSort: () => void;
 };
 
-export default function Events({ title, events, sortOrder }: EventsProps) {
+export default function Events({
+  title,
+  events,
+  sortOrder,
+  onToggleSort,
+}: EventsProps) {
   return (
     <div id="blog-posts">
-      <h1>{title}</h1>
-      <p>
-        Currently sorted by{" "}
-        {sortOrder === "asc" ? "Oldest First" : "Newest First"}
-      </p>
+      <h2>{title}</h2>
+      <button onClick={onToggleSort}>
+        Sort by {sortOrder === "asc" ? "Newest First" : "Oldest First"}
+      </button>
       <ul>
         {events.map((event) => (
           <ul key={event.text}>
